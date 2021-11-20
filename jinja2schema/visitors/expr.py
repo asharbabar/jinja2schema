@@ -593,5 +593,9 @@ def visit_dict(ast, ctx, macroses=None, config=default_config):
     ctx.meet(Dictionary(), ast)
     return _visit_dict(ast, ctx, macroses, [(item.key, item.value) for item in ast.items], config=config)
 
+@visits_expr(nodes.AssignBlock)
+def visit_assignblock(ast, ctx, macroses=None, config=default_config):
+    return Scalar(), Dictionary()
+
 
 from ..macro import MacroCall
