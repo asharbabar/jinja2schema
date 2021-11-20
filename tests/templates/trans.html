@@ -1,0 +1,148 @@
+{% set title %}
+      Your order from {{ outlet_name }} has been cancelled
+{% endset %}
+{% set headerImg %}
+    {% if lang == 'ar' %}
+      https://z.nooncdn.com/s/app/com/noon-food/images/emails/order_cancelled_v2_AR.png
+    {% else %}
+      https://z.nooncdn.com/s/app/com/noon-food/images/emails/order_cancelled_v2.png
+    {% endif %}
+{% endset %}
+
+
+{% set fontStyle %}
+    {{fontFamily}};
+    color: {{colors.textColor}};
+    margin: 2px 0;
+{% endset %}
+
+{% set paragraphStyle %}
+    {{fontStyle}}
+    {{fontDefaultSize}};
+{% endset %}
+
+{# First #}
+<tr>
+  <td class="dark-mode" style="{{fontFamily}}; word-break: break-word; padding: 20px 30px 0;">
+    <table {{tableProperties}}>
+      <tr>
+        <td align="center" dir="{{ rtl }}">
+          <table {{tableProperties}}>
+            <tr>
+              <td style="{{columnPadding}}">
+                <table style="width: 100%;">
+                  {# Greeting START #}
+                  <tr>
+                    {# Column START #}
+                    {% set content %}
+                    Hey {{ name }}
+                    {% endset %}
+                    {% set textStyle %}
+                    font-family: 'colby', Helvetica;
+                    color: {{colors.textColor}};
+                    font-size: 16px;
+                    font-weight: bold;
+                    line-height: 1.5;
+                    margin: 5px 0 0;
+                    {% endset %}
+                    {% set type = "paragraph" %}
+                    {# Column End #}
+                  </tr>
+                  <tr>
+                    {# Column START #}
+                    {% set content %}
+                    Your order from {{outlet_name}} has been cancelled.
+                    {% endset %}
+                    {% set textStyle %}
+                    {{paragraphStyle}}
+                    {% endset %}
+                    {% set columnStyle %}
+                    padding-bottom: 10px;
+                    {% endset %}
+                    {% set type = "paragraph" %}
+                    {# Column END #}
+                  </tr>
+                  {# hello customer - main text END #}
+                </table>
+              <td>
+            <tr> 
+            {# Static display #}
+            {% set content %}
+              We're already processing your refund. The order amount will be refunded to your noon wallet within 24 hours.
+            {% endset %}
+            {# Static display #}
+            <!-- {# Progress Bar START #}
+            {# {% set date = order.created_at %}
+            {% set status %}
+              {% trans %}Ordered on{% endtrans %}
+            {% endset %}
+            {% include "common/component_progress_bar/food/progress_bar.html" %} #}
+            {# Progress Bar END #} -->
+
+            {# Order Summary #}
+            {# Order Summary #}
+
+            {# Item detail START #}
+            <tr>
+              <td style="padding-top: 10px;">
+                <h2 align="{{left}}" style="font-family: 'colby', Helvetica; font-size: 16px; line-height: 1.625; color: {{colors.textColor}};">
+                    Your Order &nbsp;<span href="{{website_url}}account/orders/{{order.order_nr}}" target="_blank" style="font-weight:100; color: {{colors.textLight}}; font-family: 'colby', Helvetica;">({{order.item_count}} Item)</span>
+                </h2>
+              </td>
+            </tr>
+            {% for item in items %}
+            {% endfor %}
+            {# Item detail END #}
+
+          </table>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+{# Second #}
+<tr>
+  <td class="dark-mode"
+    style="{{fontFamily}}; word-break: break-word; padding: 8px 22px;">
+    <table {{tableProperties}}>
+      <tr>
+        <td align="center" dir="{{ rtl }}">
+          <table {{tableProperties}}>
+            {# Ordered Items #}
+            
+            {# Order Summary Pro START #}
+            {# Order Summary Pro END #}
+            <tr>
+              <td>
+                <table style="margin:0 auto; max-width: 610px;" align="center"
+                    class="almost-full-width" cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="border-bottom: solid 1px {{colors.borderColor}};" class="full-width block-td"></td>
+                    </tr>
+                </table>
+              </td>
+            </tr>
+            {# ending text #}
+            <tr>
+              {# Column START #}
+              {% set content %}
+              Thank you, <br />The noon Food team
+              {% endset %}
+              {% set columnStyle %}
+              padding: 10px 8px 20px;
+              {% endset %}
+               {% set textStyle %}
+                  {{fontStyle}}
+                  font-size: 14px;
+                  font-weight: 600;
+                  line-height: 21px;
+              {% endset %}
+              {% set type = "paragraph" %}
+              {# Column END #}
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
