@@ -177,3 +177,25 @@ def test_if_2():
         'z': Unknown(label='z', linenos=[2, 4]),
     })
     assert struct == expected_struct
+
+def test_simple_tag():
+    import jinja2
+    from jinja2_simple_tags import ContainerTag
+
+    class SomeTag(ContainerTag):
+        tags = {"sometag"}
+
+        def render(self, *args, **kwargs):
+            return ""
+    env = jinja2.Environment()
+    env.add_extension(SomeTag)
+    template = "{% sometag %}abc {{x}} {{y}} {%if z%}{{j}}{%endif%}{%endsometag%}"
+
+    struct = infer_from_ast(parse(template, jinja2_env=env))
+    expected_struct = Dictionary({
+        'x': Scalar(label='x', linenos=[1]),
+        'y': Scalar(label='y', linenos=[1]),
+        'j': Scalar(label='j', linenos=[1]),
+        'z': Unknown(label='z', linenos=[1]),
+    })
+    assert struct == expected_struct

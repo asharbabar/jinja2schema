@@ -390,6 +390,15 @@ def visit_call(ast, ctx, macroses=None, config=default_config):
                                                    config=config)
                 struct = merge(struct, arg_struct)
             return String(), struct
+        elif ast.node.name == 'gettext':
+            ctx.meet(Scalar(), ast)
+            struct = Dictionary()
+            for kwarg in ast.kwargs:
+                arg_rtype, arg_struct = visit_expr(kwarg.value, j2sctx(
+                    predicted_struct=Scalar.from_ast(kwarg, order_nr=config.ORDER_OBJECT.get_next())), macroses,
+                                                   config=config)
+                struct = merge(struct, arg_struct)
+            return String(), struct
         elif ast.node.name == 'dict':
             ctx.meet(Dictionary(), ast)
             if ast.args:

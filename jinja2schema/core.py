@@ -52,7 +52,7 @@ def infer_from_ast(ast, ignore_constants=True, config=Config()):
     return rv
 
 
-def infer(template, config=Config()):
+def infer(template, config=Config(), jinja2_env=None):
     """Returns a :class:`.model.Dictionary` which reflects a structure of the context required by ``template``.
 
     :param template: a template
@@ -63,7 +63,7 @@ def infer(template, config=Config()):
     :raises: :class:`.exceptions.MergeException`, :class:`.exceptions.InvalidExpression`,
              :class:`.exceptions.UnexpectedExpression`
     """
-    return infer_from_ast(parse(template), config=config, ignore_constants=True)
+    return infer_from_ast(parse(template, jinja2_env=jinja2_env), config=config, ignore_constants=True)
 
 
 class JSONSchemaDraft4Encoder(object):
