@@ -114,6 +114,41 @@ def visit_if(ast, macroses=None, config=default_config, child_blocks=None):
             )
     return struct
 
+@visits_stmt(nodes.AssignBlock)
+def visit_assignblock(ast, macroses=None, config=default_config, child_blocks=None):
+    struct = Dictionary()
+    if (isinstance(ast.target, nodes.Name) or
+            (isinstance(ast.target, nodes.Tuple) and isinstance(ast.node, nodes.Tuple))):
+        variables = []
+        if not (isinstance(ast.target, nodes.Tuple) and isinstance(ast.node, nodes.Tuple)):
+            variables.append((ast.target.name, ast.node))
+        else:
+            if len(ast.target.items) != len(ast.node.items):
+                raise InvalidExpression(ast, 'number of items in left side is different '
+                                             'from right side')
+            for name_ast, var_ast in izip(ast.target.items, ast.node.items):
+                variables.append((name_ast.name, var_ast))
+        for var_name, var_ast in variables:
+            var_rtype, var_struct = visit_expr(var_ast, Context(
+                predicted_struct=Unknown.from_ast(var_ast, order_nr=config.ORDER_OBJECT.get_next())), macroses, config)
+            var_rtype.constant = True
+            var_rtype.label = var_name
+            struct = merge_many(struct, var_struct, Dictionary({
+                var_name: var_rtype,
+            }))
+        return struct
+    elif isinstance(ast.target, nodes.Tuple):
+        tuple_items = []
+        for name_ast in ast.target.items:
+            var_struct = Unknown.from_ast(name_ast, constant=True, order_nr=config.ORDER_OBJECT.get_next())
+            tuple_items.append(var_struct)
+            struct = merge(struct, Dictionary({name_ast.name: var_struct}))
+        var_rtype, var_struct = visit_expr(
+            ast.node, Context(return_struct_cls=Unknown, predicted_struct=Tuple(tuple_items)), macroses, config)
+        return merge(struct, var_struct)
+    else:
+        raise InvalidExpression(ast, 'unsupported assignment')
+
 
 @visits_stmt(nodes.Assign)
 def visit_assign(ast, macroses=None, config=default_config, child_blocks=None):
